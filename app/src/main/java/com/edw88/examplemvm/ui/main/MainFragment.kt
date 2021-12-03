@@ -1,0 +1,46 @@
+package com.edw88.examplemvm.ui.main
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.edw88.examplemvm.databinding.MainFragmentBinding
+
+class MainFragment : Fragment() {
+
+    companion object {
+        fun newInstance() = MainFragment()
+    }
+
+    private lateinit var viewModel: MainViewModel
+    private lateinit var mainBinding: MainFragmentBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        mainBinding = MainFragmentBinding.inflate(inflater, container, false)
+
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+        with(mainBinding) {
+            sumarbutton.setOnClickListener {
+                viewModel.realizarSuma(
+                    num1EditText.text.toString().toInt(),
+                    num2EditText.text.toString().toInt()
+                )
+            }
+        }
+
+        viewModel.sumaDone.observe(viewLifecycleOwner, {result ->
+            mainBinding.totalTextView.text = result.toString()
+        })
+
+
+        return mainBinding.root
+    }
+
+}
